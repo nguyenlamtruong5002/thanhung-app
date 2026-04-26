@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Thạnh Hưng - iPhone Optimized</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --p-blue: #1e3799; --ca1: #007bff; --ca2: #fd7e14; --danger: #d63031; --success: #27ae60; }
+        
+        body { 
+            background-color: #f8f9fa; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Tránh bị đè bởi thanh điều hướng iPhone */
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
+
+        .header-title { 
+            background: var(--p-blue); 
+            color: white; 
+            padding: calc(15px + env(safe-area-inset-top)) 15px 15px; 
+            text-align: center; 
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card { border: none; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-top: 15px; }
+
+        .input-group-custom { 
+            display: flex; 
+            align-items: center; 
+            background: white; 
+            padding: 12px; 
+            border-radius: 15px; 
+            margin-bottom: 8px; 
+            border: 1.5px solid #eee; 
+        }
+
+        /* Tối ưu hiển thị nhãn và ô nhập cho ngón tay dễ chạm */
+        .label-vertical { width: 100px; font-weight: 700; color: #555; font-size: 0.85rem; }
+        .form-control-vertical { 
+            border: none; font-weight: 800; font-size: 1.4rem; 
+            color: #000; text-align: right; width: 100%; outline: none; 
+            background: transparent;
+        }
+
+        .ca-header { 
+            font-size: 0.8rem; font-weight: 800; padding: 6px 14px; 
+            border-radius: 10px; margin-bottom: 10px; display: inline-block; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .bg-ca1 { background: var(--ca1); color: white; }
+        .bg-ca2 { background: var(--ca2); color: white; }
+
+        /* Hiệu ứng nhấn nút trên iPhone */
+        .btn-ios {
+            border-radius: 16px;
+            font-weight: 700;
+            padding: 18px;
+            transition: all 0.1s ease;
+        }
+        .btn-ios:active { transform: scale(0.97); opacity: 0.8; }
+
+        .history-item { 
+            cursor: pointer; background: white; padding: 18px; 
+            border-radius: 18px; margin-bottom: 12px; 
+            border-left: 6px solid var(--p-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .detail-group-title { background: #f0f2f5; color: var(--p-blue); padding: 8px 12px; font-size: 0.8rem; font-weight: 800; border-radius: 10px; margin-top: 15px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 5px; border-bottom: 1px solid #f8f9fa; font-weight: 600; }
+        
+        #qrCode canvas, #qrCode img { width: 100% !important; max-width: 240px; height: auto !important; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="header-title">
+    <h4 class="mb-0 fw-bold">CHTT THẠNH HƯNG</h4>
+    <small class="opacity-75">Hệ thống gộp doanh thu 2 ngày</small>
+</div>
+
+<div class="container">
+    <div id="alertPending" class="alert alert-danger fw-bold d-none mt-3 shadow-sm" style="border-radius: 15px;"></div>
+
+    <div class="card p-3 shadow-sm">
+        <div class="ca-header bg-ca1">Ca 1</div>
+        <div class="input-group-custom"><span class="label-vertical">XĂNG 01</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c1_t1" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">XĂNG 02</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c1_t2" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">DẦU 0.001</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c1_t3" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">DẦU 0.05</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c1_t4" placeholder="0"></div>
+
+        <div class="ca-header bg-ca2 mt-3">Ca 2</div>
+        <div class="input-group-custom"><span class="label-vertical">XĂNG 01</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c2_t1" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">XĂNG 02</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c2_t2" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">DẦU 0.001</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c2_t3" placeholder="0"></div>
+        <div class="input-group-custom"><span class="label-vertical">DẦU 0.05</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money" id="c2_t4" placeholder="0"></div>
+
+        <div class="mt-3">
+            <div class="ca-header bg-danger">Khác</div>
+            <div class="input-group-custom border-danger"><span class="label-vertical text-danger">CÔNG NỢ</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money text-danger" id="cn" placeholder="0"></div>
+            <div class="input-group-custom border-success"><span class="label-vertical text-success">KHÁCH CK</span><input type="text" inputmode="numeric" class="form-control form-control-vertical input-money text-success" id="ck" placeholder="0"></div>
+        </div>
+
+        <div class="row g-2 mt-3">
+            <div class="col-6">
+                <button id="btnLuuTam" class="btn btn-outline-primary btn-ios w-100" onclick="confirmLuu()">💾 LƯU NGÀY 1</button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-primary btn-ios w-100 shadow" onclick="tinhToanTong()">🚀 TỔNG & QR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sectionKetQua" class="mt-4" style="display:none;">
+        <div class="result-box p-3 shadow-lg text-center bg-white" style="border-radius: 25px;">
+            <div id="chiTietGom" class="small mb-1 fw-bold text-primary"></div>
+            <h1 id="hienThiPhaiNop" class="text-danger fw-bold mb-3" style="font-size: 2.2rem;">0</h1>
+            <div id="qrCode"></div>
+            <div id="noiDungQR" class="mt-2 p-3 bg-light rounded-4 fw-bold small text-dark border"></div>
+            <button class="btn btn-success btn-ios w-100 mt-3 shadow" onclick="xacNhanDaNop()">✅ XÁC NHẬN ĐÃ NỘP</button>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h6 class="fw-bold px-1 mb-3">LỊCH SỬ GẦN ĐÂY</h6>
+        <div id="lichSuList"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content" style="border-radius: 30px 30px 0 0; border: none; position: absolute; bottom: 0;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold w-100 text-center" id="detailTitle">Chi tiết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detailBody" style="max-height: 80vh; overflow-y: auto; padding-bottom: 40px;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Xử lý định dạng tiền tệ và bàn phím iPhone
+    document.querySelectorAll('.input-money').forEach(i => {
+        i.addEventListener('input', function() {
+            let v = this.value.replace(/[^0-9]/g, '');
+            this.value = v ? Number(v).toLocaleString('en-US') : "";
+        });
+    });
+
+    function getNum(id) { return Number(document.getElementById(id).value.replace(/,/g, '')) || 0; }
+    function fmt(n) { return n.toLocaleString('en-US'); }
+
+    function getDayData() {
+        const c1 = [getNum('c1_t1'), getNum('c1_t2'), getNum('c1_t3'), getNum('c1_t4')];
+        const c2 = [getNum('c2_t1'), getNum('c2_t2'), getNum('c2_t3'), getNum('c2_t4')];
+        const d = new Date();
+        const dateStr = d.getDate().toString().padStart(2,'0') + "/" + (d.getMonth()+1).toString().padStart(2,'0');
+        return { c1, c2, dt: c1.reduce((a,b)=>a+b,0)+c2.reduce((a,b)=>a+b,0), cn: getNum('cn'), ck: getNum('ck'), date: dateStr };
+    }
+
+    function confirmLuu() {
+        if(confirm("XÁC NHẬN: Lưu Ngày 1 và KHÓA nút?")) luuTam();
+    }
+
+    function luuTam() {
+        localStorage.setItem('TH_IOS_V12', JSON.stringify(getDayData()));
+        location.reload();
+    }
+
+    function checkPending() {
+        const p = localStorage.getItem('TH_IOS_V12');
+        if(p) { 
+            const d = JSON.parse(p);
+            document.getElementById('alertPending').classList.remove('d-none'); 
+            document.getElementById('alertPending').innerText = "📍 Đang giữ dữ liệu Ngày: " + d.date; 
+            const btn = document.getElementById('btnLuuTam');
+            btn.disabled = true; btn.innerHTML = "🚫 ĐÃ LƯU"; btn.className = "btn btn-light btn-ios w-100";
+        }
+    }
+
+    function generateVietQR(bankBin, accountNo, amount, description) {
+        const f = (id, val) => id + val.length.toString().padStart(2, '0') + val;
+        const guid = f("00", "A000000727");
+        const bankData = f("00", bankBin) + f("01", accountNo);
+        const merchant = f("38", guid + f("01", bankData));
+        let payload = "000201010212" + merchant + "520459115303704" + f("54", amount.toString()) + "5802VN" + f("62", f("08", description)) + "6304";
+        function crc16(str) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < str.length; i++) {
+                let x = ((crc >> 8) ^ str.charCodeAt(i)) & 0xFF; x ^= x >> 4;
+                crc = ((crc << 8) ^ (x << 12) ^ (x << 5) ^ x) & 0xFFFF;
+            }
+            return crc.toString(16).toUpperCase().padStart(4, '0');
+        }
+        return payload + crc16(payload);
+    }
+
+    let curr = null;
+
+    function tinhToanTong() {
+        const d1 = JSON.parse(localStorage.getItem('TH_IOS_V12') || '{"c1":[0,0,0,0],"c2":[0,0,0,0],"dt":0,"cn":0,"ck":0,"date":"?"}');
+        const d2 = getDayData();
+        if(d1.date === "?") return alert("Hãy LƯU NGÀY 1 trước!");
+        
+        const nopGoc = (d1.dt + d2.dt) - (d1.cn + d2.cn) - (d1.ck + d2.ck);
+        const phi = Math.ceil((nopGoc * 0.0049) / 1000) * 1000;
+        const phaiNop = nopGoc - phi;
+        const nd = `CHTT THANH HUNG NOP TIEN NGAY ${d1.date} VA ${d2.date} PHI ${fmt(phi)}`;
+        
+        curr = { d1, d2, phi, phaiNop, nd };
+        document.getElementById('chiTietGom').innerText = `Gộp: ${d1.date} & ${d2.date}`;
+        document.getElementById('hienThiPhaiNop').innerText = fmt(phaiNop);
+        document.getElementById('sectionKetQua').style.display = 'block';
+
+        const qrContainer = document.getElementById('qrCode');
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, { text: generateVietQR("970415", "114000123687", phaiNop, nd), width: 240, height: 240 });
+        document.getElementById('noiDungQR').innerText = nd;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function xacNhanDaNop() {
+        const h = JSON.parse(localStorage.getItem('TH_HIST_IOS') || '[]');
+        h.unshift(curr);
+        localStorage.setItem('TH_HIST_IOS', JSON.stringify(h.slice(0, 15)));
+        localStorage.removeItem('TH_IOS_V12');
+        location.reload();
+    }
+
+    function xemChiTiet(index) {
+        const h = JSON.parse(localStorage.getItem('TH_HIST_IOS') || '[]');
+        const s = h[index];
+        const lbl = ["Xăng 01", "Xăng 02", "Dầu 0.001", "Dầu 0.05"];
+        let html = `<div class="p-2 text-center mb-3"><div class="h3 fw-bold text-danger">${fmt(s.phaiNop)} đ</div></div>`;
+        
+        const renderDay = (data, title) => `
+            <div class="detail-group-title">${title} (${data.date})</div>
+            <div class="small fw-bold text-primary mt-2">CA 1</div>
+            ${data.c1.map((v, i) => `<div class="detail-row"><span class="text-muted">${lbl[i]}</span><span>${fmt(v)}</span></div>`).join('')}
+            <div class="small fw-bold text-warning mt-2">CA 2</div>
+            ${data.c2.map((v, i) => `<div class="detail-row"><span class="text-muted">${lbl[i]}</span><span>${fmt(v)}</span></div>`).join('')}
+            <div class="detail-row text-danger"><span class="text-danger">Công nợ:</span><span>-${fmt(data.cn)}</span></div>
+            <div class="detail-row text-success"><span class="text-success">Khách CK:</span><span>-${fmt(data.ck)}</span></div>
+        `;
+
+        html += renderDay(s.d1, "NGÀY THỨ NHẤT") + renderDay(s.d2, "NGÀY THỨ HAI");
+        document.getElementById('detailBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('modalDetail')).show();
+    }
+
+    function hienThiLichSu() {
+        const h = JSON.parse(localStorage.getItem('TH_HIST_IOS') || '[]');
+        let html = '';
+        h.forEach((s, i) => {
+            html += `<div class="history-item d-flex justify-content-between align-items-center" onclick="xemChiTiet(${i})">
+                <div><div class="fw-bold text-primary">📅 ${s.d1.date} - ${s.d2.date}</div><div class="small text-muted">Bấm để xem 16 trụ</div></div>
+                <div class="fw-bold text-danger">${fmt(s.phaiNop)} đ</div>
+            </div>`;
+        });
+        document.getElementById('lichSuList').innerHTML = html || '<p class="text-center small text-muted">Chưa có dữ liệu</p>';
+    }
+
+    checkPending(); hienThiLichSu();
+</script>
+</body>
+</html>
